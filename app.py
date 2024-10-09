@@ -119,10 +119,10 @@ if uploaded_files:
         ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
         range_bins = [0, 51, 61, 71, 81, 91, 100]
 
-        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-            lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
+        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
         
-        # # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
+        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
         range_counts_per_class = range_counts_per_class.astype(int)
         range_counts_per_class_reset = range_counts_per_class.reset_index()
