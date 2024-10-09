@@ -109,7 +109,7 @@ if uploaded_files:
             '71-80': final_df[(final_df['Percentile'] >= 71) & (final_df['Percentile'] <= 80)].shape[0],
             '61-70': final_df[(final_df['Percentile'] >= 61) & (final_df['Percentile'] <= 70)].shape[0],
             '51-60': final_df[(final_df['Percentile'] >= 51) & (final_df['Percentile'] <= 60)].shape[0],
-            'Less than 50': final_df[final_df['Percentile'] < 50].shape[0]
+            'Less than 50': final_df[final_df['Percentile'] <= 50].shape[0]
         }
 
         # Creating a DataFrame to display the ranges and their respective counts
@@ -117,12 +117,12 @@ if uploaded_files:
 
         # Group data by class and subject, calculate the counts in each range
         ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
-        range_bins = [0, 50, 60, 70, 80, 90, 100]
+        range_bins = [0, 51, 61, 71, 81, 91, 100]
 
-        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
+            lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
         
-        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
+        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
         st.write("Class and Subject-wise Percentile Distribution:")
         st.write(range_counts_per_class)
