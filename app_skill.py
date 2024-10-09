@@ -6,10 +6,15 @@ from io import BytesIO
 
 # Function to find the page with the "Skill-based Summary" header
 def find_skill_summary_page(pdf):
-    for i, page in enumerate(pdf.pages):
-        text = page.extract_text()
-        if text and "Skill-based Summary" in text:
-            return i
+    for i in range(4, 8):  # Page indices for pages 5 to 8
+        try:
+            page = pdf.pages[i]
+            text = page.extract_text()
+            if text and "Skill-based Summary" in text:
+                return i
+        except IndexError:
+            # If the page does not exist in the PDF
+            break
     return None
 
 # Function to extract data from a single PDF
