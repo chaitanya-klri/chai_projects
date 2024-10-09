@@ -117,26 +117,71 @@ if uploaded_files:
         # Creating a DataFrame to display the ranges and their respective counts
         range_df = pd.DataFrame(list(ranges.items()), columns=['Percentile Range', 'Number of Students'])
 
-        # Group data by class and subject, calculate the counts in each range
-        ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
-        range_bins = [0, 51, 61, 71, 81, 91, 100]
+        # # Group data by class and subject, calculate the counts in each range
+        # ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
+        # range_bins = [0, 51, 61, 71, 81, 91, 100]
 
-        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-            lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
+        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
         
-        #range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
+        # #range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
         print(type(range_counts_per_class))
 
+
+
+   # Create a function to categorize percentiles into ranges
+        def categorize_percentile(percentile):
+            if percentile < 50:
+                return '<50'
+            elif 51 <= percentile <= 60:
+                return '51-60'
+            elif 61 <= percentile <= 70:
+                return '61-70'
+            elif 71 <= percentile <= 80:
+                return '71-80'
+            elif 81 <= percentile <= 90:
+                return '81-90'
+            else:
+                return '91-100'
+
+        # Apply the categorization function to create a new column
+        final_df['Percentile Range'] = final_df['Percentile'].apply(categorize_percentile)
+
+        # Create a pivot table
+        pivot_table = pd.pivot_table(final_df, 
+                                       index=['Class', 'Subject'], 
+                                       columns='Percentile Range', 
+                                       values='Student', 
+                                       aggfunc='count', 
+                                       fill_value=0)
+
+        # Reset index to flatten the DataFrame for better readability
+        pivot_table = pivot_table.reset_index()
+
         st.write("Class and Subject-wise Percentile Distribution:")
-        st.write(range_counts_per_class)
+        st.write(pivot_table)
+
+        # Save the pivot table to Excel
+        excel_file_path = 'pivot_table_class_subject.xlsx'
+        pivot_table.to_excel(excel_file_path, index=False)
+
+        st.download_button(
+            label="Download Class and Subject-wise Percentile Distribution as Excel",
+            data=open(excel_file_path, "rb").read(),
+            file_name="pivot_table_class_subject.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        
+        # st.write("Class and Subject-wise Percentile Distribution:")
+        # st.write(range_counts_per_class)
 
         # Save the range data to Excel
         excel_file_path_school = 'ranges_school.xlsx'
         excel_file_path_class = 'ranges_class.xlsx'
         
         range_df.to_excel(excel_file_path_school, index=False)
-        range_counts_per_class.to_excel(excel_file_path_class)
+        #range_counts_per_class.to_excel(excel_file_path_class)
 
         st.download_button(
             label="Download School-wise Ranges as Excel",
@@ -145,9 +190,9 @@ if uploaded_files:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
-        st.download_button(
-            label="Download Class-wise Ranges as Excel",
-            data=open(excel_file_path_class, "rb").read(),
-            file_name="ranges_class.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
+        # st.download_button(
+        #     label="Download Class-wise Ranges as Excel",
+        #     data=open(excel_file_path_class, "rb").read(),
+        #     file_name="ranges_class.xlsx",
+        #     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        # )
