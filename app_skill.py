@@ -100,7 +100,7 @@ if uploaded_files:
 
         excel_file_path="Skill Summary.xlsx"
         # Convert DataFrame to Excel
-        final_df.to_excel(excel_file_path)
+        final_df.to_excel(excel_file_path,ignore_index=True)
 
         # Download button for the Excel file
         st.download_button(
