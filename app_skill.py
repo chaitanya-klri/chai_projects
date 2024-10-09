@@ -80,17 +80,13 @@ if uploaded_files:
         st.dataframe(final_df)
 
         # Convert DataFrame to Excel
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            final_df.to_excel(writer, index=False, sheet_name='Skill Summary')
-            writer.save()
-        output.seek(0)
+        final_df.to_excel(excel_file_path)
 
         # Download button for the Excel file
         st.download_button(
             label="Download Excel File",
-            data=output,
-            file_name="skill_based_summary.xlsx",
+            data=open(excel_file_path, "rb").read(),
+            file_name="Skill Summary.xlsx"
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
