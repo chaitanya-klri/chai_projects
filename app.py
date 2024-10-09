@@ -148,6 +148,7 @@ if uploaded_files:
 
 
         pivot_table_school = pd.pivot_table(final_df, 
+                                       index='Subject',
                                        columns='Percentile Range', 
                                        values='Student', 
                                        aggfunc='count', 
