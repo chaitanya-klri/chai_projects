@@ -172,7 +172,7 @@ if uploaded_files:
         st.write(range_df)
 
         st.download_button(
-            label="Download School-wise Ranges as Excel",
+            label="Download Full School Percentile distribution as Excel",
             data=open(excel_file_path_school, "rb").read(),
             file_name="School Percentile distribution.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
