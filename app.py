@@ -134,7 +134,7 @@ if uploaded_files:
         excel_file_path_class = 'ranges_class.xlsx'
         
         range_df.to_excel(excel_file_path_school, index=False)
-        range_counts_per_class.to_excel(excel_file_path_class)
+        # range_counts_per_class.to_excel(excel_file_path_class)
 
         st.download_button(
             label="Download School-wise Ranges as Excel",
