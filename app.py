@@ -124,6 +124,8 @@ if uploaded_files:
         
         # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
+        range_counts_per_class = range_counts_per_class.astype(int)
+
         st.write("Class and Subject-wise Percentile Distribution:")
         st.write(range_counts_per_class)
 
