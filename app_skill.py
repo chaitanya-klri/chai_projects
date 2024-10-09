@@ -24,8 +24,8 @@ def extract_data_from_pdf(pdf_path):
         df = pd.DataFrame(data, columns=["S.no", "Skill", "Section Performance", "Class Performance", "National Performance"])
         
         # Extract information from the filename
-        filename = pdf_path.split('/')[-1]
-        parts = filename.split('_')
+        # filename = pdf_path.split('/')[-1]
+        parts = pdf_path.split('_')
         
         # Add new columns based on the filename
         school_code = parts[0]
