@@ -79,6 +79,7 @@ if uploaded_files:
         # Display the DataFrame
         st.dataframe(final_df)
 
+        excel_file_path="Skill Summary.xlsx"
         # Convert DataFrame to Excel
         final_df.to_excel(excel_file_path)
 
