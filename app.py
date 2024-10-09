@@ -119,8 +119,10 @@ if uploaded_files:
         ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
         range_bins = [0, 50, 60, 70, 80, 90, 100]
 
-        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-            lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
+        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        
+        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
         st.write("Class and Subject-wise Percentile Distribution:")
         st.write(range_counts_per_class)
