@@ -126,7 +126,7 @@ if uploaded_files:
         
         # #range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
-        print(type(range_counts_per_class))
+        # print(type(range_counts_per_class))
 
 
 
