@@ -6,6 +6,7 @@ import os
 def extract_subject_class(filename):
     # Split the filename and extract the relevant part
     parts = filename.split('_')
+    school_code=parts[0]
     subject_code = parts[1][0]
     class_code = int(parts[1][1:2])
     section_code = parts[1][2]
@@ -17,7 +18,7 @@ def extract_subject_class(filename):
     subject_mapping = {'E': 'English', 'M': 'Maths', 'S': 'Science'}
     subject = subject_mapping.get(subject_code, 'Unknown')
 
-    return subject, class_code, section_code
+    return school_code,subject, class_code, section_code
 
 def process_pdfs(uploaded_files):
     all_dataframes = []
@@ -25,7 +26,7 @@ def process_pdfs(uploaded_files):
     for uploaded_file in uploaded_files:
         filename = uploaded_file.name
         # Extract subject and class from the filename
-        subject, class_code, section_code = extract_subject_class(filename)
+        school_code,subject, class_code, section_code = extract_subject_class(filename)
 
         with pdfplumber.open(uploaded_file) as pdf:
             try:
@@ -53,6 +54,7 @@ def process_pdfs(uploaded_files):
 
                     # Create a DataFrame for this PDF
                     df = pd.DataFrame({
+                        'School Code' : school_code,
                         'Student': students,
                         'Percentile': percentiles,
                         'Subject': subject,
@@ -119,13 +121,12 @@ if uploaded_files:
         ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
         range_bins = [0, 51, 61, 71, 81, 91, 100]
 
-        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
+            lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
         
-        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
+        #range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
-        range_counts_per_class = range_counts_per_class.astype(int)
-        range_counts_per_class_reset = range_counts_per_class.reset_index()
+        print(type(range_counts_per_class))
 
         st.write("Class and Subject-wise Percentile Distribution:")
         st.write(range_counts_per_class)
