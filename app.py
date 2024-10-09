@@ -146,6 +146,13 @@ if uploaded_files:
                                        aggfunc='count', 
                                        fill_value=0)
 
+
+        pivot_table_school = pd.pivot_table(final_df, 
+                                       columns='Percentile Range', 
+                                       values='Student', 
+                                       aggfunc='count', 
+                                       fill_value=0)
+
         # Reset index to flatten the DataFrame for better readability
         pivot_table = pivot_table.reset_index()
 
