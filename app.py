@@ -123,17 +123,17 @@ if uploaded_files:
    # Create a function to categorize percentiles into ranges
         def categorize_percentile(percentile):
             if percentile < 50:
-                return '<50'
+                return '<50 Percentile'
             elif 51 <= percentile <= 60:
-                return '51-60'
+                return '51-60 Percentile'
             elif 61 <= percentile <= 70:
-                return '61-70'
+                return '61-70 Percentile'
             elif 71 <= percentile <= 80:
-                return '71-80'
+                return '71-80 Percentile'
             elif 81 <= percentile <= 90:
-                return '81-90'
+                return '81-90 Percentile'
             else:
-                return '91-100'
+                return '91-100 Percentile'
 
         # Apply the categorization function to create a new column
         final_df['Percentile Range'] = final_df['Percentile'].apply(categorize_percentile)
@@ -150,11 +150,14 @@ if uploaded_files:
         pivot_table = pivot_table.reset_index()
 
         st.write("Class and Subject-wise Percentile Distribution:")
+        st.markdown("The output will be number of students in various percentile score ranges.")
         st.write(pivot_table)
 
         # Save the pivot table to Excel
         excel_file_path = 'pivot_table_class_subject.xlsx'
         pivot_table.to_excel(excel_file_path, index=False)
+
+        
 
         st.download_button(
             label="Download Class and Subject-wise Percentile Distribution as Excel",
