@@ -4,8 +4,8 @@ import pandas as pd
 from io import BytesIO
 
 # Function to extract data from a single PDF
-def extract_data_from_pdf(pdf_path):
-    with pdfplumber.open(pdf_path) as pdf:
+def extract_data_from_pdf(uploaded_file):
+    with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
         # Adjust the page number as per your PDF (here assuming page 7)
         page = pdf.pages[6]  # Index starts at 0
         
@@ -23,9 +23,9 @@ def extract_data_from_pdf(pdf_path):
         # Convert to a DataFrame
         df = pd.DataFrame(data, columns=["S.no", "Skill", "Section Performance", "Class Performance", "National Performance"])
         
-        # Extract information from the filename
-        # filename = pdf_path.split('/')[-1]
-        parts = pdf_path.split('_')
+        # Extract information from the uploaded file name
+        filename = uploaded_file.name
+        parts = filename.split('_')
         
         # Add new columns based on the filename
         school_code = parts[0]
@@ -59,7 +59,7 @@ def extract_data_from_pdf(pdf_path):
         return pd.DataFrame()  # Return an empty DataFrame if no table is found
 
 # Streamlit App
-st.title("PDF to Excel Data Extractor")
+st.title("Skill Based Summary")
 
 # Upload PDFs
 uploaded_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
@@ -67,11 +67,10 @@ uploaded_files = st.file_uploader("Upload PDF files", type="pdf", accept_multipl
 if uploaded_files:
     dfs = []
     for uploaded_file in uploaded_files:
-        # Read each PDF file
-        with BytesIO(uploaded_file.read()) as pdf_file:
-            df = extract_data_from_pdf(pdf_file)
-            if not df.empty:
-                dfs.append(df)
+        # Extract data from each uploaded PDF file
+        df = extract_data_from_pdf(uploaded_file)
+        if not df.empty:
+            dfs.append(df)
     
     # Concatenate all DataFrames into a single DataFrame
     if dfs:
