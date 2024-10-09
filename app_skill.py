@@ -93,7 +93,7 @@ if uploaded_files:
     
     # Concatenate all DataFrames into a single DataFrame
     if dfs:
-        final_df = pd.concat(dfs, ignore_index=True)
+        final_df = pd.concat(dfs, index=False)
 
         # Display the DataFrame
         st.dataframe(final_df)
