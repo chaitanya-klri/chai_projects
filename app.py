@@ -155,6 +155,7 @@ if uploaded_files:
 
         # Reset index to flatten the DataFrame for better readability
         pivot_table = pivot_table.reset_index()
+        pivot_table_school = pivot_table_school.reset_index()
 
         st.write("Class and Subject-wise Percentile Distribution:")
         st.markdown("The output will be number of students in various percentile score ranges.")
@@ -177,11 +178,14 @@ if uploaded_files:
         # Save the range data to Excel
         excel_file_path_school = 'ranges_school.xlsx'
         excel_file_path_class = 'ranges_class.xlsx'
+
+        pivot_table_school.to_excel(excel_file_path_school, index=False)
+
         
-        range_df.to_excel(excel_file_path_school, index=False)
+        # range_df.to_excel(excel_file_path_school, index=False)
 
         st.write("Full School Percentile distribution for all subjects:")
-        st.write(range_df)
+        st.write(pivot_table_school)
 
         st.download_button(
             label="Download Full School Percentile distribution as Excel",
