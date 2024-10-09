@@ -3,13 +3,27 @@ import pdfplumber
 import pandas as pd
 from io import BytesIO
 
+
+# Function to find the page with the "Skill-based Summary" header
+def find_skill_summary_page(pdf):
+    for i, page in enumerate(pdf.pages):
+        text = page.extract_text()
+        if text and "Skill-based Summary" in text:
+            return i
+    return None
+
 # Function to extract data from a single PDF
 def extract_data_from_pdf(uploaded_file):
+    
     with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
-        # Adjust the page number as per your PDF (here assuming page 7)
-        page = pdf.pages[6]  # Index starts at 0
+        # Find the page containing "Skill-based Summary"
+        page_number = find_skill_summary_page(pdf)
+        if page_number is None:
+            st.warning("Skill-based Summary not found in the PDF.")
+            return pd.DataFrame()  # Return an empty DataFrame if not found
         
-        # Extract the table from the page
+        # Extract the table from the identified page
+        page = pdf.pages[page_number]
         table = page.extract_table()
     
     # Extract relevant rows and columns
