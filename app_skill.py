@@ -86,7 +86,7 @@ if uploaded_files:
         st.download_button(
             label="Download Excel File",
             data=open(excel_file_path, "rb").read(),
-            file_name="Skill Summary.xlsx"
+            file_name="Skill Summary.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
