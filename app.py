@@ -79,6 +79,8 @@ def process_pdfs(uploaded_files):
 
 # Streamlit app
 st.title("PDF Student Performance Analyzer")
+st.markdown("Upload the TMB's of one academic year. Use this to get the percentile score distribution for an academic year. ")
+
 
 # File uploader
 uploaded_files = st.file_uploader("Upload PDFs", accept_multiple_files=True, type=["pdf"])
@@ -98,7 +100,7 @@ if uploaded_files:
         final_df.to_excel(excel_file_path, index=False)
 
         st.download_button(
-            label="Download Combined Data as Excel",
+            label="Download Student Wise Percentile scores as Excel",
             data=open(excel_file_path, "rb").read(),
             file_name="Student Wise Percentile scores.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
