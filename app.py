@@ -100,7 +100,7 @@ if uploaded_files:
         st.download_button(
             label="Download Combined Data as Excel",
             data=open(excel_file_path, "rb").read(),
-            file_name="combined_data.xlsx",
+            file_name="Student Wise Percentile scores.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
@@ -116,18 +116,6 @@ if uploaded_files:
 
         # Creating a DataFrame to display the ranges and their respective counts
         range_df = pd.DataFrame(list(ranges.items()), columns=['Percentile Range', 'Number of Students'])
-
-        # # Group data by class and subject, calculate the counts in each range
-        # ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
-        # range_bins = [0, 51, 61, 71, 81, 91, 100]
-
-        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
-        
-        # #range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
-
-        # print(type(range_counts_per_class))
-
 
 
    # Create a function to categorize percentiles into ranges
@@ -173,26 +161,20 @@ if uploaded_files:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
         
-        # st.write("Class and Subject-wise Percentile Distribution:")
-        # st.write(range_counts_per_class)
 
         # Save the range data to Excel
         excel_file_path_school = 'ranges_school.xlsx'
         excel_file_path_class = 'ranges_class.xlsx'
         
         range_df.to_excel(excel_file_path_school, index=False)
-        #range_counts_per_class.to_excel(excel_file_path_class)
+
+        st.write("Full School Percentile distribution for all subjects:")
+        st.write(range_df)
 
         st.download_button(
             label="Download School-wise Ranges as Excel",
             data=open(excel_file_path_school, "rb").read(),
-            file_name="ranges_school.xlsx",
+            file_name="School Percentile distribution.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
-        # st.download_button(
-        #     label="Download Class-wise Ranges as Excel",
-        #     data=open(excel_file_path_class, "rb").read(),
-        #     file_name="ranges_class.xlsx",
-        #     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        # )
