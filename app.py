@@ -119,22 +119,23 @@ if uploaded_files:
         ranges = ['91-100', '81-90', '71-80', '61-70', '51-60', '<50']
         range_bins = [0, 51, 61, 71, 81, 91, 100]
 
-        # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
-        #     lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
+        range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile'].apply(
+            lambda x: pd.cut(x, bins=range_bins, labels=ranges).value_counts().sort_index()).unstack().fillna(0)
         
         # # range_counts_per_class = final_df.groupby(['Class', 'Subject'])['Percentile']
 
-        # range_counts_per_class = range_counts_per_class.astype(int)
+        range_counts_per_class = range_counts_per_class.astype(int)
+        range_counts_per_class_reset = range_counts_per_class.reset_index()
 
-        # st.write("Class and Subject-wise Percentile Distribution:")
-        # st.write(range_counts_per_class)
+        st.write("Class and Subject-wise Percentile Distribution:")
+        st.write(range_counts_per_class)
 
         # Save the range data to Excel
         excel_file_path_school = 'ranges_school.xlsx'
         excel_file_path_class = 'ranges_class.xlsx'
         
         range_df.to_excel(excel_file_path_school, index=False)
-        # range_counts_per_class.to_excel(excel_file_path_class)
+        range_counts_per_class.to_excel(excel_file_path_class)
 
         st.download_button(
             label="Download School-wise Ranges as Excel",
@@ -143,9 +144,9 @@ if uploaded_files:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
-        # st.download_button(
-        #     label="Download Class-wise Ranges as Excel",
-        #     data=open(excel_file_path_class, "rb").read(),
-        #     file_name="ranges_class.xlsx",
-        #     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        # )
+        st.download_button(
+            label="Download Class-wise Ranges as Excel",
+            data=open(excel_file_path_class, "rb").read(),
+            file_name="ranges_class.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
