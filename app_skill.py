@@ -63,7 +63,7 @@ def extract_data_from_pdf(uploaded_file):
     with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
         # Extract the year from the footer
         year = extract_year_from_footer(pdf)
-        st.write(year)
+        st.write("Year",year)
         if not year:
             st.warning("Year not found in the PDF footer.")
             return pd.DataFrame()  # Return an empty DataFrame if the year is not found
