@@ -21,20 +21,34 @@ def find_skill_summary_page(pdf):
 # Function to extract the year from the footer of the PDF pages
 def extract_year_from_footer(pdf):
     for page in pdf.pages:
-        footer_text = page.extract_text(x_tolerance=2, y_tolerance=2, layout=True)
+        # Get the height and width of the page to target the footer area
+        page_height = page.height
+        page_width = page.width
+        
+        # Define a box at the bottom of the page to extract footer text
+        footer_box = (0, page_height - 50, page_width, page_height)
+        footer_text = page.within_bbox(footer_box).extract_text()
         
         # Check if there's text in the footer that might contain the year
         if footer_text:
             # Look for a year pattern (e.g., 2020, 2021, etc.)
             match = re.search(r"\b(20\d{2})\b", footer_text)
             if match:
-                return match.group(0)
+                year = match.group(0)
+                st.write("Extracted Year:", year)  # Debug print for the extracted year
+                return year
     return None
 
 # Function to extract school code, subject, class, and section from the footer
 def extract_info_from_footer(pdf):
     for page in pdf.pages:
-        footer_text = page.extract_text(x_tolerance=2, y_tolerance=2, layout=True)
+        # Get the height and width of the page to target the footer area
+        page_height = page.height
+        page_width = page.width
+        
+        # Define a box at the bottom of the page to extract footer text
+        footer_box = (0, page_height - 50, page_width, page_height)
+        footer_text = page.within_bbox(footer_box).extract_text()
         
         # Check if the footer contains the pattern for school code and details (e.g., "2565760/E3A")
         if footer_text:
@@ -63,7 +77,6 @@ def extract_data_from_pdf(uploaded_file):
     with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
         # Extract the year from the footer
         year = extract_year_from_footer(pdf)
-        st.write("Year",year)
         if not year:
             st.warning("Year not found in the PDF footer.")
             return pd.DataFrame()  # Return an empty DataFrame if the year is not found
