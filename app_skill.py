@@ -20,6 +20,7 @@ def find_skill_summary_page(pdf):
 
 # Function to extract the year from the footer of the PDF pages
 def extract_year_from_footer(pdf):
+    st.write("Calling extract_year_from_footer")
     for page in pdf.pages:
         # Get the height and width of the page to target the footer area
         page_height = page.height
