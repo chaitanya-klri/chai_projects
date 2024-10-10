@@ -38,7 +38,7 @@ def extract_info_from_footer(pdf):
         
         # Check if the footer contains the pattern for school code and details (e.g., "1131322_E3A")
         if footer_text:
-            match = re.search(r"(\d+)_([A-Z])(\d{1,2})([A-Z])", footer_text)
+            match = re.search(r"(\d+)/([A-Z])(\d{1,2})([A-Z])", footer_text)
             if match:
                 school_code = match.group(1)
                 subject_code = match.group(2)
