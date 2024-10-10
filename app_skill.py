@@ -92,7 +92,7 @@ def extract_data_from_pdf(uploaded_file):
                 data.append([row[0], row[1], row[3], row[4], row[5]])
         
         # Convert to a DataFrame
-        df = pd.DataFrame(data, columns=["S.no", "Skill", "Section Performance", "Class Performance", "National Performance"])
+        df = pd.DataFrame(data, columns=["S.no", "Skill", "Section Performance", "Class Performance", "National Performance","Year"])
         
         # Add columns to the DataFrame
         df['School Code'] = school_code
