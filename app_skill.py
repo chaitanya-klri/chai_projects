@@ -69,6 +69,7 @@ def extract_data_from_pdf(uploaded_file):
         
         # Extract school code, subject, class, and section from the footer
         school_code, subject, class_value, section = extract_info_from_footer(pdf)
+        print("Details",school_code, subject, class_value, section)
         if not school_code or not subject or not class_value or not section:
             st.warning("School code, subject, class, or section not found in the PDF footer.")
             return pd.DataFrame()  # Return an empty DataFrame if any of the information is missing
