@@ -1,6 +1,7 @@
 import streamlit as st
 import pdfplumber
 import pandas as pd
+import re
 from io import BytesIO
 
 
@@ -17,10 +18,61 @@ def find_skill_summary_page(pdf):
             break
     return None
 
+# Function to extract the year from the footer of the PDF pages
+def extract_year_from_footer(pdf):
+    for page in pdf.pages:
+        footer_text = page.extract_text(x_tolerance=2, y_tolerance=2, layout=True)
+        
+        # Check if there's text in the footer that might contain the year
+        if footer_text:
+            # Look for a year pattern (e.g., 2020, 2021, etc.)
+            match = re.search(r"\b(20\d{2})\b", footer_text)
+            if match:
+                return match.group(0)
+    return None
+
+# Function to extract school code, subject, class, and section from the footer
+def extract_info_from_footer(pdf):
+    for page in pdf.pages:
+        footer_text = page.extract_text(x_tolerance=2, y_tolerance=2, layout=True)
+        
+        # Check if the footer contains the pattern for school code and details (e.g., "1131322_E3A")
+        if footer_text:
+            match = re.search(r"(\d+)_([A-Z])(\d{1,2})([A-Z])", footer_text)
+            if match:
+                school_code = match.group(1)
+                subject_code = match.group(2)
+                class_value = match.group(3)
+                section = match.group(4)
+                
+                # Determine the subject based on the subject code
+                if subject_code == 'E':
+                    subject = 'English'
+                elif subject_code == 'M':
+                    subject = 'Maths'
+                elif subject_code == 'S':
+                    subject = 'Science'
+                else:
+                    subject = 'Unknown'
+                
+                return school_code, subject, class_value, section
+    return None, None, None, None
+
 # Function to extract data from a single PDF
 def extract_data_from_pdf(uploaded_file):
-    
     with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
+        # Extract the year from the footer
+        year = extract_year_from_footer(pdf)
+        if not year:
+            st.warning("Year not found in the PDF footer.")
+            return pd.DataFrame()  # Return an empty DataFrame if the year is not found
+        
+        # Extract school code, subject, class, and section from the footer
+        school_code, subject, class_value, section = extract_info_from_footer(pdf)
+        if not school_code or not subject or not class_value or not section:
+            st.warning("School code, subject, class, or section not found in the PDF footer.")
+            return pd.DataFrame()  # Return an empty DataFrame if any of the information is missing
+        
         # Find the page containing "Skill-based Summary"
         page_number = find_skill_summary_page(pdf)
         if page_number is None:
@@ -42,35 +94,12 @@ def extract_data_from_pdf(uploaded_file):
         # Convert to a DataFrame
         df = pd.DataFrame(data, columns=["S.no", "Skill", "Section Performance", "Class Performance", "National Performance"])
         
-        # Extract information from the uploaded file name
-        filename = uploaded_file.name
-        parts = filename.split('_')
-        
-        # Add new columns based on the filename
-        school_code = parts[0]
-        subject_code = parts[1][0]
-        if subject_code == 'E':
-            subject = 'English'
-        elif subject_code == 'M':
-            subject = 'Maths'
-        elif subject_code == 'S':
-            subject = 'Science'
-        else:
-            subject = 'Unknown'
-        
-        # Determine class and section
-        if parts[1][1:3] == '10':
-            class_value = '10'
-            section = parts[1][3]
-        else:
-            class_value = parts[1][1]
-            section = parts[1][2]
-        
         # Add columns to the DataFrame
         df['School Code'] = school_code
         df['Subject'] = subject
         df['Class'] = class_value
         df['Section'] = section
+        df['Year'] = year
         
         return df
     else:
@@ -98,9 +127,9 @@ if uploaded_files:
         # Display the DataFrame
         st.dataframe(final_df)
 
-        excel_file_path="Skill Summary.xlsx"
+        excel_file_path = "Skill Summary.xlsx"
         # Convert DataFrame to Excel
-        final_df.to_excel(excel_file_path,index=False)
+        final_df.to_excel(excel_file_path, index=False)
 
         # Download button for the Excel file
         st.download_button(
