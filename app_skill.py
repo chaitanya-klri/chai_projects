@@ -122,7 +122,7 @@ def extract_data_from_pdf(uploaded_file):
         return pd.DataFrame()  # Return an empty DataFrame if no table is found
 
 # Streamlit App
-st.title("Skill Based Summary")
+st.title("Skill Based Summary",year)
 
 # Upload PDFs
 uploaded_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
