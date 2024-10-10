@@ -36,7 +36,7 @@ def extract_info_from_footer(pdf):
     for page in pdf.pages:
         footer_text = page.extract_text(x_tolerance=2, y_tolerance=2, layout=True)
         
-        # Check if the footer contains the pattern for school code and details (e.g., "1131322_E3A")
+        # Check if the footer contains the pattern for school code and details (e.g., "2565760/E3A")
         if footer_text:
             match = re.search(r"(\d+)/([A-Z])(\d{1,2})([A-Z])", footer_text)
             if match:
@@ -69,7 +69,6 @@ def extract_data_from_pdf(uploaded_file):
         
         # Extract school code, subject, class, and section from the footer
         school_code, subject, class_value, section = extract_info_from_footer(pdf)
-        print("Details",school_code, subject, class_value, section)
         if not school_code or not subject or not class_value or not section:
             st.warning("School code, subject, class, or section not found in the PDF footer.")
             return pd.DataFrame()  # Return an empty DataFrame if any of the information is missing
@@ -100,7 +99,7 @@ def extract_data_from_pdf(uploaded_file):
         df['Subject'] = subject
         df['Class'] = class_value
         df['Section'] = section
-        df['Year'] = year
+        df['Year'] = year  # Add the extracted year here
         
         return df
     else:
