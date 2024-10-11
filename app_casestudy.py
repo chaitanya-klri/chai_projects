@@ -159,13 +159,13 @@ if uploaded_file is not None:
 
     # Convert the list to a DataFrame
     table_df = pd.DataFrame(table_data)
-
+    
     # Save the DataFrame as an Excel file in a BytesIO object
     excel_buf = BytesIO()
     with pd.ExcelWriter(excel_buf, engine='openpyxl') as writer:
         table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
     excel_buf.seek(0)
-
+    st.write(table_df)
     # Provide a download button for the Excel file
     st.download_button(
         label="Download Table as Excel",
