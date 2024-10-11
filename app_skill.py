@@ -143,11 +143,11 @@ if uploaded_files:
 
         st.write("Complete Skill list")
         st.dataframe(final_df)
-        excel_file_path_complete="Complete Skill Summary"
+        excel_file_path_complete="Complete Skill Summary.xlsx"
         st.download_button(
             label="Download complete data as Excel File",
             data=open(excel_file_path_complete, "rb").read(),
-            file_name="Skill Summary.xlsx",
+            file_name="Complete Skill Summary.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
