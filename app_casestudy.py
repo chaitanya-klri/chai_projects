@@ -113,13 +113,18 @@ if uploaded_file is not None:
         mime="image/png"
     )
 
-    # Step 4: Build the progressive table with start and end question numbers
+    # Step 4: Build the progressive table excluding the Challenge portions
     table_data = []
     previous_mode = None
     start_question_number = None
 
     for i, (index, row) in enumerate(merged_df.iterrows()):
         current_mode = row['Mode']
+
+        # Skip rows where the mode is "Challenge"
+        if current_mode == 'Challenge':
+            continue
+
         current_question_number = row['Question_Number']
         cluster = row['Cluster']
         concept_level = row['Concept Level']
