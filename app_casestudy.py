@@ -123,7 +123,9 @@ if uploaded_file is not None:
         current_question_number = row['Question_Number']
         cluster = row['Cluster']
         concept_level = row['Concept Level']
-        correctness = merged_df[(merged_df['Cluster'] == cluster) & (merged_df['Mode'] == current_mode)]['Correctness'].values
+
+        # Dynamically filter the correctness values for this row
+        correctness = merged_df[(merged_df['Cluster'] == cluster) & (merged_df['Mode'] == current_mode) & (merged_df['Question_Number'] == current_question_number)]['Correctness'].values
 
         if previous_mode is None or current_mode != previous_mode:
             # New mode detected or first entry
@@ -146,8 +148,10 @@ if uploaded_file is not None:
                 'End Question Number': None  # To be filled in the next iteration
             })
         else:
-            # Update the previous mode and accuracy
-            table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + correctness.sum() / len(correctness)) / 2, 2)
+            # Update the previous mode and accuracy dynamically
+            table_data[-1]['Concept Level'] = concept_level
+            if len(correctness) > 0:
+                table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + correctness.sum()) / 2, 2)
 
         # Update the previous mode
         previous_mode = current_mode
@@ -159,12 +163,13 @@ if uploaded_file is not None:
 
     # Convert the list to a DataFrame
     table_df = pd.DataFrame(table_data)
-    
+
     # Save the DataFrame as an Excel file in a BytesIO object
     excel_buf = BytesIO()
     with pd.ExcelWriter(excel_buf, engine='openpyxl') as writer:
         table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
     excel_buf.seek(0)
+
     st.write(table_df)
     # Provide a download button for the Excel file
     st.download_button(
