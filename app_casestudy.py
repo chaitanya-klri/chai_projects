@@ -4,7 +4,7 @@ import streamlit as st
 from io import BytesIO
 
 # Streamlit app title
-st.title("Concept Level Analysis")
+st.title("Learning journey of students")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
@@ -58,9 +58,11 @@ if uploaded_file is not None:
     ax.set_ylabel('Concept Level')
     ax.yaxis.get_major_locator().set_params(integer=True)
 
-    # Set the x and y limits based on the data range to correctly scale the plot
+    # Set the x-axis limits based on the question number range
     ax.set_xlim([question_numbers.min(), question_numbers.max()])
-    ax.set_ylim([concept_levels.min(), concept_levels.max()])
+
+    # Extend the y-axis limits based on the concept levels (adding padding)
+    ax.set_ylim([concept_levels.min() - 1, concept_levels.max() + 1])
 
     # Plot a smooth line for concept levels and change color segments based on mode
     for i in range(1, len(question_numbers)):
@@ -135,16 +137,19 @@ if uploaded_file is not None:
         table_data[-1]['End Question Number'] = merged_df.iloc[-1]['Question_Number']
         table_data[-1]['Number of Questions'] = table_data[-1]['End Question Number'] - table_data[-1]['Start Question Number'] + 1
 
-    # Convert the list to a DataFrame and display it
+    # Convert the list to a DataFrame
     table_df = pd.DataFrame(table_data)
-    st.write("Progressive Table of Clusters, Concept Levels, Modes, Number of Questions, Accuracy, Start and End Question Numbers")
-    st.dataframe(table_df)
 
-    # Option to download the table as a CSV file
-    csv = table_df.to_csv(index=False).encode('utf-8')
+    # Save the DataFrame as an Excel file in a BytesIO object
+    excel_buf = BytesIO()
+    with pd.ExcelWriter(excel_buf, engine='openpyxl') as writer:
+        table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
+    excel_buf.seek(0)
+
+    # Provide a download button for the Excel file
     st.download_button(
-        label="Download Table as CSV",
-        data=csv,
-        file_name="concept_level_table.csv",
-        mime="text/csv"
+        label="Download Table as Excel",
+        data=excel_buf,
+        file_name="concept_level_table.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
