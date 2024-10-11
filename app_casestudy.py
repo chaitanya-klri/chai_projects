@@ -117,6 +117,7 @@ if uploaded_file is not None:
     table_data = []
     previous_mode = None
     start_question_number = None
+    start_concept_level = None
 
     for i, (index, row) in enumerate(merged_df.iterrows()):
         current_mode = row['Mode']
@@ -127,17 +128,18 @@ if uploaded_file is not None:
         # Dynamically filter the correctness values for this row
         correctness = merged_df[(merged_df['Cluster'] == cluster) & (merged_df['Mode'] == current_mode) & (merged_df['Question_Number'] == current_question_number)]['Correctness'].values
 
-        if previous_mode is None or current_mode != previous_mode:
-            # New mode detected or first entry
+        if previous_mode is None or current_mode != previous_mode or start_concept_level is None or concept_level != start_concept_level:
+            # New mode or concept level change detected or first entry
             if start_question_number is not None:
-                # If this is not the first entry, finalize the previous row
+                # Finalize the previous row
                 table_data[-1]['End Question Number'] = merged_df.iloc[i-1]['Question_Number']
                 table_data[-1]['Number of Questions'] = table_data[-1]['End Question Number'] - table_data[-1]['Start Question Number'] + 1
 
-            # Set the start question number for the new mode
+            # Set the start question number and concept level for the new mode/level
             start_question_number = current_question_number
+            start_concept_level = concept_level
 
-            # Add a new row for the new mode
+            # Add a new row for the new mode/level
             table_data.append({
                 'Cluster': cluster,
                 'Concept Level': concept_level,
@@ -149,12 +151,11 @@ if uploaded_file is not None:
             })
         else:
             # Update the previous mode and accuracy dynamically
-            table_data[-1]['Concept Level'] = concept_level
-            if len(correctness) > 0:
-                table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + correctness.sum()) / 2, 2)
+            table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + correctness.sum()) / 2, 2)
 
-        # Update the previous mode
+        # Update the previous mode and concept level
         previous_mode = current_mode
+        start_concept_level = concept_level
 
     # Finalize the last row's end question number and number of questions
     if table_data:
