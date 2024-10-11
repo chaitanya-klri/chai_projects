@@ -140,7 +140,16 @@ if uploaded_files:
     
     if dfs:
         final_df = pd.concat(dfs, ignore_index=True)
+
+        st.write("Complete Skill list")
         st.dataframe(final_df)
+
+         st.download_button(
+            label="Download complete data as Excel File",
+            data=open(excel_file_path, "rb").read(),
+            file_name="Skill Summary.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
         # Pivot the DataFrame to organize by School Code, Class, Subject, and Year
         pivot_df = final_df.pivot_table(
@@ -160,6 +169,7 @@ if uploaded_files:
         # )
         # pivot_df = pivot_df[ordered_columns]
 
+        st.write("Skill comparison year wise")
         st.dataframe(pivot_df)
 
 
@@ -167,7 +177,7 @@ if uploaded_files:
         pivot_df.to_excel(excel_file_path)
 
         st.download_button(
-            label="Download Excel File",
+            label="Download Pivoted data as Excel File",
             data=open(excel_file_path, "rb").read(),
             file_name="Skill Summary.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
