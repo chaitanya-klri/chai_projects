@@ -60,18 +60,6 @@ if uploaded_file is not None:
     # Sort the DataFrame by Question_Number to ensure a continuous line
     merged_df = merged_df.sort_values(by='Question_Number')
 
-    # Create a challenge summary
-    challenge_df = merged_df[merged_df['Mode'] == 'Challenge']
-    challenge_questions = len(challenge_df)
-    challenge_correctness = challenge_df['Correctness'].values
-    challenge_accuracy = round(challenge_correctness.sum() / len(challenge_correctness), 2) if len(challenge_correctness) > 0 else 0
-
-    # Display the summary of challenge questions
-    st.write(f"Challenge Summary: {challenge_questions} questions attempted with an accuracy of {challenge_accuracy * 100:.2f}%")
-
-    # Temporarily rename 'Challenge' to 'Learn' but exclude it from accuracy calculations
-    merged_df['Mode'] = merged_df['Mode'].replace('Challenge', 'Learn')
-
     # Extract unique question numbers and corresponding concept levels and modes
     question_numbers = merged_df['Question_Number'].values
     concept_levels = merged_df['Concept Level'].values
@@ -100,8 +88,8 @@ if uploaded_file is not None:
         color = 'green' if modes[i] == 'Learn' else 'red' if modes[i] == 'Remediation' else 'blue'
         ax.plot(question_numbers[i-1:i+1], concept_levels[i-1:i+1], color=color, linestyle='-')
 
-        # For "Challenge" mode (now renamed to Learn), add markers
-        if modes[i] == 'Learn' and merged_df.iloc[i]['Mode'] == 'Challenge':
+        # For "Challenge" mode, add markers
+        if modes[i] == 'Challenge':
             ax.scatter(question_numbers[i], concept_levels[i], color='blue', marker='^', s=100)
 
     # Adding legend manually for all modes
@@ -125,16 +113,13 @@ if uploaded_file is not None:
         mime="image/png"
     )
 
-    # Step 4: Build the progressive table excluding challenge for accuracy calculation
+    # Step 4: Build the progressive table with start and end question numbers
     table_data = []
     previous_mode = None
     start_question_number = None
 
     for i, (index, row) in enumerate(merged_df.iterrows()):
         current_mode = row['Mode']
-        if current_mode == 'Challenge':
-            continue  # Skip Challenge mode for accuracy calculation
-
         current_question_number = row['Question_Number']
         cluster = row['Cluster']
         concept_level = row['Concept Level']
@@ -181,8 +166,6 @@ if uploaded_file is not None:
         table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
     excel_buf.seek(0)
 
-    st.write(table_df)
-    
     # Provide a download button for the Excel file
     st.download_button(
         label="Download Table as Excel",
