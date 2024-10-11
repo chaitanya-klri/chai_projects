@@ -166,6 +166,8 @@ if uploaded_file is not None:
         table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
     excel_buf.seek(0)
 
+    st.write(table_df)
+    
     # Provide a download button for the Excel file
     st.download_button(
         label="Download Table as Excel",
