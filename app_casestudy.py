@@ -10,9 +10,10 @@ st.title("Concept Level Analysis")
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
 
 if uploaded_file is not None:
-    # Prompt for the student's name
-    student_name = st.text_input("Enter the student's name:")
 
+    
+
+    
     # Read the data from the uploaded file
     sheet_name_trail = 'result'
     copy_trail_df = pd.read_excel(uploaded_file, sheet_name=sheet_name_trail)
@@ -45,18 +46,10 @@ if uploaded_file is not None:
 
     # Create the plot
     fig, ax = plt.subplots(figsize=(10, 6))
-    if student_name:
-        chart_title = f"Learning trail of {student_name} - Topic"
-    else:
-        chart_title = "Learning trail - Topic"
-    ax.set_title(chart_title)
+    ax.set_title('Concept Level Analysis')
     ax.set_xlabel('Question Number')
     ax.set_ylabel('Concept Level')
     ax.yaxis.get_major_locator().set_params(integer=True)
-
-    # Ensure the x and y axes start together at 0
-    ax.set_xlim(left=0)
-    ax.set_ylim(bottom=0)
 
     # Plot a smooth line for concept levels and change color segments based on mode
     for i in range(1, len(question_numbers)):
