@@ -28,10 +28,9 @@ def extract_year_from_pdf(pdf):
         r"Summer 2023", r"Winter 2023",
         r"Summer 2024", r"Winter 2024"
     ]
-    
-    for page in pdf.pages:
-        text = page.extract_text()
-        if text:
+    page = pdf.pages[3]
+    text = page.extract_text()
+    if text:
             st.write("Page text found for year extraction")  # Debug statement
             st.write("Text is",text)
             # Search for the specific patterns
