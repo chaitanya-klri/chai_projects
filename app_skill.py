@@ -164,7 +164,7 @@ if uploaded_files:
 
 
         excel_file_path = "Skill Summary.xlsx"
-        pivot_df.to_excel(excel_file_path, index=False)
+        pivot_df.to_excel(excel_file_path)
 
         st.download_button(
             label="Download Excel File",
