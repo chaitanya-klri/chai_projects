@@ -33,6 +33,7 @@ def extract_year_from_pdf(pdf):
         text = page.extract_text()
         if text:
             st.write("Page text found for year extraction")  # Debug statement
+            st.write("Text is",text)
             # Search for the specific patterns
             for pattern in patterns:
                 if re.search(pattern, text):
@@ -141,6 +142,7 @@ if uploaded_files:
     if dfs:
         final_df = pd.concat(dfs, ignore_index=True)
         st.dataframe(final_df)
+        st.write(final_df)
         excel_file_path = "Skill Summary.xlsx"
         final_df.to_excel(excel_file_path, index=False)
 
