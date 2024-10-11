@@ -4,7 +4,7 @@ import streamlit as st
 from io import BytesIO
 
 # Streamlit app title
-st.title("Concept Level Analysis")
+st.title("Learning Case Study")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
@@ -22,8 +22,8 @@ if uploaded_file is not None:
 
     st.write("Enter the levels for the following concepts:")
     for concept in unique_concepts:
-        # Get user input for each concept level
-        level = st.number_input(f"Level for '{concept}':", min_value=0.0, max_value=100.0, value=0.0, step=0.1)
+        # Get user input for each concept level (integer values only)
+        level = st.number_input(f"Level for '{concept}':", min_value=-1000, max_value=1000, value=0, step=1, format="%d")
         concept_levels[concept] = level
 
     # Convert the dictionary to a DataFrame
