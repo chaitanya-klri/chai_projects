@@ -87,14 +87,13 @@ if uploaded_file is not None:
         cluster = row['Cluster']
         concept_level = row['Concept Level']
         correctness = merged_df[(merged_df['Cluster'] == cluster) & (merged_df['Mode'] == current_mode)]['Correctness'].values
-        num_questions = len(correctness)
-        accuracy = correctness.sum() / len(correctness) if len(correctness) > 0 else 0
 
         if previous_mode is None or current_mode != previous_mode:
             # New mode detected or first entry
             if start_question_number is not None:
                 # If this is not the first entry, finalize the previous row
                 table_data[-1]['End Question Number'] = merged_df.iloc[i-1]['Question_Number']
+                table_data[-1]['Number of Questions'] = table_data[-1]['End Question Number'] - table_data[-1]['Start Question Number'] + 1
 
             # Set the start question number for the new mode
             start_question_number = current_question_number
@@ -104,22 +103,22 @@ if uploaded_file is not None:
                 'Cluster': cluster,
                 'Concept Level': concept_level,
                 'Mode': current_mode,
-                'Number of Questions': num_questions,
-                'Accuracy': round(accuracy, 2),
+                'Number of Questions': 0,  # Will be filled later
+                'Accuracy': round(correctness.sum() / len(correctness), 2) if len(correctness) > 0 else 0,
                 'Start Question Number': start_question_number,
-                'End Question Number': None  # To be filled in next iteration
+                'End Question Number': None  # To be filled in the next iteration
             })
         else:
-            # Update the number of questions and accuracy for the ongoing mode
-            table_data[-1]['Number of Questions'] += num_questions
-            table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + accuracy) / 2, 2)
+            # Update the previous mode and accuracy
+            table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + correctness.sum() / len(correctness)) / 2, 2)
 
         # Update the previous mode
         previous_mode = current_mode
 
-    # Finalize the last row's end question number
+    # Finalize the last row's end question number and number of questions
     if table_data:
         table_data[-1]['End Question Number'] = merged_df.iloc[-1]['Question_Number']
+        table_data[-1]['Number of Questions'] = table_data[-1]['End Question Number'] - table_data[-1]['Start Question Number'] + 1
 
     # Convert the list to a DataFrame and display it
     table_df = pd.DataFrame(table_data)
