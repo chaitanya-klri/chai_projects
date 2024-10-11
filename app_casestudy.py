@@ -90,11 +90,12 @@ if uploaded_file is not None:
 
         # For "Challenge" mode, add markers
         if modes[i] == 'Challenge':
-            ax.scatter(question_numbers[i], concept_levels[i], color='blue', marker='^', s=100, label='Challenge' if i == 1 else "")
+            ax.scatter(question_numbers[i], concept_levels[i], color='blue', marker='^', s=100)
 
-    # Adding legend manually for the other modes since only Challenge has markers
+    # Adding legend manually for all modes
     ax.plot([], [], color='green', label='Learn')
     ax.plot([], [], color='red', label='Remediation')
+    ax.scatter([], [], color='blue', marker='^', s=100, label='Challenge')
 
     ax.legend()
     st.pyplot(fig)
