@@ -127,9 +127,10 @@ def extract_data_from_pdf(uploaded_file):
 
 # Streamlit App
 st.title("Skill Based Summary")
+st.markdown("This facility is to be able to give you yearwise collection of skills by uploading the TMBs of a school.")
 
 # Upload PDFs
-uploaded_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
+uploaded_files = st.file_uploader("Upload PDF files. Note that you can attach TMBs of as many academic years from 2022 to 2024.", type="pdf", accept_multiple_files=True)
 
 if uploaded_files:
     dfs = []
