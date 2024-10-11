@@ -58,9 +58,9 @@ if uploaded_file is not None:
     ax.set_ylabel('Concept Level')
     ax.yaxis.get_major_locator().set_params(integer=True)
 
-    # Ensure the x and y axes start together at 0
-    ax.set_xlim(left=0)
-    ax.set_ylim(bottom=0)
+    # Set the x and y limits based on the data range to correctly scale the plot
+    ax.set_xlim([question_numbers.min(), question_numbers.max()])
+    ax.set_ylim([concept_levels.min(), concept_levels.max()])
 
     # Plot a smooth line for concept levels and change color segments based on mode
     for i in range(1, len(question_numbers)):
