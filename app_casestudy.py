@@ -4,7 +4,7 @@ import streamlit as st
 from io import BytesIO
 
 # Streamlit app title
-st.title("Learning Case Study")
+st.title("Concept Level Analysis")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
@@ -76,28 +76,54 @@ if uploaded_file is not None:
         mime="image/png"
     )
 
-    # Step 4: Build the progressive table
+    # Step 4: Build the progressive table with start and end question numbers
     table_data = []
-    for mode in merged_df['Mode'].unique():
-        mode_df = merged_df[merged_df['Mode'] == mode]
-        for cluster in mode_df['Cluster'].unique():
-            cluster_df = mode_df[mode_df['Cluster'] == cluster]
-            concept_level = cluster_df['Concept Level'].iloc[0]
-            num_questions = len(cluster_df)
-            correctness = cluster_df['Correctness'].values
-            accuracy = correctness.sum() / len(correctness) if len(correctness) > 0 else 0
+    previous_mode = None
+    start_question_number = None
 
+    for i, (index, row) in enumerate(merged_df.iterrows()):
+        current_mode = row['Mode']
+        current_question_number = row['Question_Number']
+        cluster = row['Cluster']
+        concept_level = row['Concept Level']
+        correctness = merged_df[(merged_df['Cluster'] == cluster) & (merged_df['Mode'] == current_mode)]['Correctness'].values
+        num_questions = len(correctness)
+        accuracy = correctness.sum() / len(correctness) if len(correctness) > 0 else 0
+
+        if previous_mode is None or current_mode != previous_mode:
+            # New mode detected or first entry
+            if start_question_number is not None:
+                # If this is not the first entry, finalize the previous row
+                table_data[-1]['End Question Number'] = merged_df.iloc[i-1]['Question_Number']
+
+            # Set the start question number for the new mode
+            start_question_number = current_question_number
+
+            # Add a new row for the new mode
             table_data.append({
                 'Cluster': cluster,
                 'Concept Level': concept_level,
-                'Mode': mode,
+                'Mode': current_mode,
                 'Number of Questions': num_questions,
-                'Accuracy': round(accuracy, 2)
+                'Accuracy': round(accuracy, 2),
+                'Start Question Number': start_question_number,
+                'End Question Number': None  # To be filled in next iteration
             })
+        else:
+            # Update the number of questions and accuracy for the ongoing mode
+            table_data[-1]['Number of Questions'] += num_questions
+            table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + accuracy) / 2, 2)
+
+        # Update the previous mode
+        previous_mode = current_mode
+
+    # Finalize the last row's end question number
+    if table_data:
+        table_data[-1]['End Question Number'] = merged_df.iloc[-1]['Question_Number']
 
     # Convert the list to a DataFrame and display it
     table_df = pd.DataFrame(table_data)
-    st.write("Progressive Table of Clusters, Concept Levels, Modes, Number of Questions, and Accuracy")
+    st.write("Progressive Table of Clusters, Concept Levels, Modes, Number of Questions, Accuracy, Start and End Question Numbers")
     st.dataframe(table_df)
 
     # Option to download the table as a CSV file
