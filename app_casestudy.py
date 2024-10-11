@@ -4,7 +4,7 @@ import streamlit as st
 from io import BytesIO
 
 # Streamlit app title
-st.title("Concept Level Analysis")
+st.title("Learning Journey of Students")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
@@ -39,6 +39,20 @@ if uploaded_file is not None:
     # Display the table of concepts and levels entered by the user
     st.write("Concept Levels Entered by User:")
     st.dataframe(concepts_df)
+
+    # Save the concepts DataFrame as an Excel file in a BytesIO object
+    concepts_excel_buf = BytesIO()
+    with pd.ExcelWriter(concepts_excel_buf, engine='openpyxl') as writer:
+        concepts_df.to_excel(writer, index=False, sheet_name='Concept Levels')
+    concepts_excel_buf.seek(0)
+
+    # Provide a download button for the Concept Levels Excel file
+    st.download_button(
+        label="Download Concept Levels as Excel",
+        data=concepts_excel_buf,
+        file_name="concept_levels.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
     # Merge the user-provided concept levels back into the main DataFrame
     merged_df = pd.merge(copy_trail_df, concepts_df, left_on='Cluster', right_on='Concept', how='left')
