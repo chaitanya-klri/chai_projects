@@ -11,7 +11,7 @@ uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
 
 if uploaded_file is not None:
     # Read the data from the uploaded file
-    sheet_name_trail = 'Copy student trail here'
+    sheet_name_trail = 'result'
     copy_trail_df = pd.read_excel(uploaded_file, sheet_name=sheet_name_trail)
     
     # Extract unique concepts
