@@ -154,11 +154,11 @@ if uploaded_files:
         # pivot_df.columns = [' '.join(col).strip() if col[1] else col[0] for col in pivot_df.columns]
 
         # Reorder columns to display the Class Performance and National Performance for each year sequentially
-        ordered_columns = (
-            ["School Code", "Subject", "Skill"] +
-            [col for year in sorted(final_df['Year'].unique()) for col in [f"Class Performance {year}", f"National Performance {year}"]]
-        )
-        pivot_df = pivot_df[ordered_columns]
+        # ordered_columns = (
+        #     ["School Code", "Subject", "Skill"] +
+        #     [col for year in sorted(final_df['Year'].unique()) for col in [f"Class Performance {year}", f"National Performance {year}"]]
+        # )
+        # pivot_df = pivot_df[ordered_columns]
 
         st.dataframe(pivot_df)
 
