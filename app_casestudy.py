@@ -4,7 +4,7 @@ import streamlit as st
 from io import BytesIO
 
 # Streamlit app title
-st.title("Learning journey of students")
+st.title("Concept Level Analysis")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
@@ -34,10 +34,14 @@ if uploaded_file is not None:
         concept_levels[concept] = level
 
     # Convert the dictionary to a DataFrame
-    concepts_df = pd.DataFrame(list(concept_levels.items()), columns=['Cluster', 'Concept Level'])
+    concepts_df = pd.DataFrame(list(concept_levels.items()), columns=['Concept', 'Concept Level'])
+
+    # Display the table of concepts and levels entered by the user
+    st.write("Concept Levels Entered by User:")
+    st.dataframe(concepts_df)
 
     # Merge the user-provided concept levels back into the main DataFrame
-    merged_df = pd.merge(copy_trail_df, concepts_df, on='Cluster', how='left')
+    merged_df = pd.merge(copy_trail_df, concepts_df, left_on='Cluster', right_on='Concept', how='left')
 
     # Sort the DataFrame by Question_Number to ensure a continuous line
     merged_df = merged_df.sort_values(by='Question_Number')
@@ -61,8 +65,9 @@ if uploaded_file is not None:
     # Set the x-axis limits based on the question number range
     ax.set_xlim([question_numbers.min(), question_numbers.max()])
 
-    # Extend the y-axis limits based on the concept levels (adding padding)
+    # Extend the y-axis limits based on the concept levels (adding padding) and set the major unit to 1
     ax.set_ylim([concept_levels.min() - 1, concept_levels.max() + 1])
+    ax.yaxis.set_major_locator(plt.MultipleLocator(1))
 
     # Plot a smooth line for concept levels and change color segments based on mode
     for i in range(1, len(question_numbers)):
@@ -145,8 +150,6 @@ if uploaded_file is not None:
     with pd.ExcelWriter(excel_buf, engine='openpyxl') as writer:
         table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
     excel_buf.seek(0)
-
-    st.write(table_df)
 
     # Provide a download button for the Excel file
     st.download_button(
