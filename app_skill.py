@@ -147,7 +147,7 @@ if uploaded_files:
             index=["School Code", "Class", "Subject", "Skill"],
             columns="Year",
             values=["Section Performance", "National Performance"],
-            aggfunc="mean"
+            aggfunc="first"
         ).reset_index()
 
         # Flatten the multi-level columns
