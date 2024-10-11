@@ -26,12 +26,12 @@ def extract_year_from_pdf(pdf):
     # Define the patterns to search for
     patterns = [
         r"Summer 2023", r"Winter 2023",
-        r"Summer 2024", r"Winter 2024"
+        r"Summer 2024", r"Winter 2024",
+        r"Summer 2022", r"Winter 2022"
     ]
     page = pdf.pages[3]
     text = page.extract_text()
     if text:
-            st.write("Page text found for year extraction")  # Debug statement
             st.write("Text is",text)
             # Search for the specific patterns
             for pattern in patterns:
