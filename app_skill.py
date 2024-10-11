@@ -146,8 +146,7 @@ if uploaded_files:
         pivot_df = final_df.pivot_table(
             index=["School Code", "Class", "Subject", "Skill"],
             columns="Year",
-            values=["Section Performance", "National Performance"],
-            aggfunc="mean"
+            values=["Section Performance", "National Performance"]
         ).reset_index()
 
         # Flatten the multi-level columns
