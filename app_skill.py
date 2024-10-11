@@ -144,7 +144,7 @@ if uploaded_files:
         st.write("Complete Skill list")
         st.dataframe(final_df)
 
-         st.download_button(
+        st.download_button(
             label="Download complete data as Excel File",
             data=open(excel_file_path, "rb").read(),
             file_name="Skill Summary.xlsx",
