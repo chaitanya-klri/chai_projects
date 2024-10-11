@@ -7,13 +7,13 @@ from io import BytesIO
 
 # Function to find the page with the "Skill-based Summary" header
 def find_skill_summary_page(pdf):
-    st.write("Calling find_skill_summary_page")  # Debug statement
+    # st.write("Calling find_skill_summary_page")  # Debug statement
     for i in range(4, 8):  # Page indices for pages 5 to 8
         try:
             page = pdf.pages[i]
             text = page.extract_text()
             if text and "Skill-based Summary" in text:
-                st.write("Skill-based Summary found on page:", i + 1)  # Debug statement
+                # st.write("Skill-based Summary found on page:", i + 1)  # Debug statement
                 return i
         except IndexError:
             break
@@ -22,7 +22,7 @@ def find_skill_summary_page(pdf):
 
 # Function to extract the year based on specific terms (e.g., "Summer 2023")
 def extract_year_from_pdf(pdf):
-    st.write("Calling extract_year_from_pdf")  # Debug statement
+    # st.write("Calling extract_year_from_pdf")  # Debug statement
     # Define the patterns to search for
     patterns = [
         r"Summer 2023", r"Winter 2023",
@@ -32,21 +32,21 @@ def extract_year_from_pdf(pdf):
     page = pdf.pages[3]
     text = page.extract_text()
     if text:
-            st.write("Text is",text)
+            # st.write("Text is",text)
             # Search for the specific patterns
             for pattern in patterns:
                 if re.search(pattern, text):
-                    st.write("Pattern found:", pattern)  # Debug statement
+                    # st.write("Pattern found:", pattern)  # Debug statement
                     # Extract the year from the pattern
                     year = pattern[-4:]
-                    st.write("Extracted Year:", year)  # Debug statement
+                    # st.write("Extracted Year:", year)  # Debug statement
                     return year
-    st.write("No matching year pattern found in the PDF")  # Debug statement
+    # st.write("No matching year pattern found in the PDF")  # Debug statement
     return None
 
 # Function to extract school code, subject, class, and section from the footer
 def extract_info_from_footer(pdf):
-    st.write("Calling extract_info_from_footer")  # Debug statement
+    # st.write("Calling extract_info_from_footer")  # Debug statement
     for page in pdf.pages:
         # Get the height and width of the page to target the footer area
         page_height = page.height
@@ -57,14 +57,14 @@ def extract_info_from_footer(pdf):
         footer_text = page.within_bbox(footer_box).extract_text()
         
         if footer_text:
-            st.write("Footer text for info extraction:", footer_text)  # Debug statement
+            # st.write("Footer text for info extraction:", footer_text)  # Debug statement
             match = re.search(r"(\d+)/([A-Z])(\d{1,2})([A-Z])", footer_text)
             if match:
                 school_code = match.group(1)
                 subject_code = match.group(2)
                 class_value = match.group(3)
                 section = match.group(4)
-                st.write("Extracted info - School Code:", school_code, "Subject:", subject_code, "Class:", class_value, "Section:", section)  # Debug statement
+                # st.write("Extracted info - School Code:", school_code, "Subject:", subject_code, "Class:", class_value, "Section:", section)  # Debug statement
                 
                 if subject_code == 'E':
                     subject = 'English'
@@ -81,7 +81,7 @@ def extract_info_from_footer(pdf):
 
 # Function to extract data from a single PDF
 def extract_data_from_pdf(uploaded_file):
-    st.write("Calling extract_data_from_pdf")  # Debug statement
+    # st.write("Calling extract_data_from_pdf")  # Debug statement
     with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
         # Extract the year from the PDF
         year = extract_year_from_pdf(pdf)
@@ -107,7 +107,7 @@ def extract_data_from_pdf(uploaded_file):
     
     # Extract relevant rows and columns
     if table:
-        st.write("Table found in the PDF")  # Debug statement
+        # st.write("Table found in the PDF")  # Debug statement
         data = []
         for row in table[2:]:
             if row[0] is not None:
@@ -141,7 +141,7 @@ if uploaded_files:
     if dfs:
         final_df = pd.concat(dfs, ignore_index=True)
         st.dataframe(final_df)
-        st.write(final_df)
+
         excel_file_path = "Skill Summary.xlsx"
         final_df.to_excel(excel_file_path, index=False)
 
