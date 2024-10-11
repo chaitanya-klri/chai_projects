@@ -139,19 +139,24 @@ if uploaded_file is not None:
             start_question_number = current_question_number
             start_concept_level = concept_level
 
+            # Calculate accuracy as a percentage
+            accuracy_percentage = round((correctness.sum() / len(correctness)) * 100, 2) if len(correctness) > 0 else 0
+
             # Add a new row for the new mode/level
             table_data.append({
                 'Cluster': cluster,
                 'Concept Level': concept_level,
                 'Mode': current_mode,
                 'Number of Questions': 0,  # Will be filled later
-                'Accuracy': round(correctness.sum() / len(correctness), 2) if len(correctness) > 0 else 0,
+                'Accuracy (%)': accuracy_percentage,
                 'Start Question Number': start_question_number,
                 'End Question Number': None  # To be filled in the next iteration
             })
         else:
             # Update the previous mode and accuracy dynamically
-            table_data[-1]['Accuracy'] = round((table_data[-1]['Accuracy'] + correctness.sum()) / 2, 2)
+            table_data[-1]['Concept Level'] = concept_level
+            if len(correctness) > 0:
+                table_data[-1]['Accuracy (%)'] = round((table_data[-1]['Accuracy (%)'] + (correctness.sum() / len(correctness)) * 100) / 2, 2)
 
         # Update the previous mode and concept level
         previous_mode = current_mode
@@ -170,7 +175,7 @@ if uploaded_file is not None:
     with pd.ExcelWriter(excel_buf, engine='openpyxl') as writer:
         table_df.to_excel(writer, index=False, sheet_name='Concept Level Table')
     excel_buf.seek(0)
-
+    
     st.write(table_df)
     # Provide a download button for the Excel file
     st.download_button(
