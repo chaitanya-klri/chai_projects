@@ -142,6 +142,20 @@ if uploaded_files:
         final_df = pd.concat(dfs, ignore_index=True)
         st.dataframe(final_df)
 
+        # Pivot the DataFrame to organize by School Code, Class, Subject, and Year
+        pivot_df = final_df.pivot_table(
+            index=["School Code", "Class", "Subject", "Skill"],
+            columns="Year",
+            values=["Section Performance", "National Performance"],
+            aggfunc="mean"
+        ).reset_index()
+
+        # Flatten the multi-level columns
+        # pivot_df.columns = [' '.join(col).strip() if col[1] else col[0] for col in pivot_df.columns]
+
+        st.dataframe(pivot_df)
+
+
         excel_file_path = "Skill Summary.xlsx"
         final_df.to_excel(excel_file_path, index=False)
 
