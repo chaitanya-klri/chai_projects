@@ -13,9 +13,8 @@ if uploaded_file is not None:
     # Prompt for the student's name
     student_name = st.text_input("Enter the student's name:")
 
-    # Read the data from the uploaded file
-    sheet_name_trail = 'result'
-    copy_trail_df = pd.read_excel(uploaded_file, sheet_name=sheet_name_trail)
+    # Automatically load the only sheet available in the uploaded file
+    copy_trail_df = pd.read_excel(uploaded_file, sheet_name=0)  # sheet_name=0 loads the first/only sheet automatically
     
     # Extract unique topics and set the first one as the default topic for the chart
     topics = copy_trail_df['Topic'].unique()
