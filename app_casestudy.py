@@ -23,6 +23,8 @@ if uploaded_file is not None:
     # Extract unique concepts
     unique_concepts = copy_trail_df['Cluster'].unique()
 
+    st.markdown("Concepts solved by the student-This includes all concepts solved by the student as a part of the topic attempt.")
+    st.write(unique_concepts)
     # Dictionary to store user inputs for concept levels
     concept_levels = {}
 
@@ -81,6 +83,9 @@ if uploaded_file is not None:
     # Extend the y-axis limits based on the concept levels (adding padding) and set the major unit to 1
     ax.set_ylim([concept_levels.min() - 1, concept_levels.max() + 1])
     ax.yaxis.set_major_locator(plt.MultipleLocator(1))
+
+    # Add gridlines to the plot
+    ax.grid(True)
 
     # Plot a smooth line for concept levels and change color segments based on mode
     for i in range(1, len(question_numbers)):
