@@ -27,7 +27,11 @@ def extract_year_from_pdf(pdf):
     patterns = [
         r"Summer 2023", r"Winter 2023",
         r"Summer 2024", r"Winter 2024",
-        r"Summer 2022", r"Winter 2022"
+        r"Summer 2022", r"Winter 2022",
+        # Add all month-year combinations
+    r"January \d{4}", r"February \d{4}", r"March \d{4}", r"April \d{4}",
+    r"May \d{4}", r"June \d{4}", r"July \d{4}", r"August \d{4}",
+    r"September \d{4}", r"October \d{4}", r"November \d{4}", r"December \d{4}"
     ]
     page = pdf.pages[3]
     text = page.extract_text()
