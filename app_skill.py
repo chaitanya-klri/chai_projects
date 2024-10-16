@@ -72,6 +72,12 @@ def extract_info_from_footer(pdf):
                     subject = 'Maths'
                 elif subject_code == 'S':
                     subject = 'Science'
+                elif subject_code == 'C' or subject_code == 'CT':
+                    subject = 'Computational Thinking'
+                elif subject_code == 'G':
+                    subject = 'Social Studies'
+                elif subject_code == 'H':
+                    subject = 'Hindi'    
                 else:
                     subject = 'Unknown'
                 
