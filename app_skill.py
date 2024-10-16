@@ -57,7 +57,7 @@ def extract_info_from_footer(pdf):
         footer_text = page.within_bbox(footer_box).extract_text()
         
         if footer_text:
-            # st.write("Footer text for info extraction:", footer_text)  # Debug statement
+            st.write("Footer text for info extraction:", footer_text)  # Debug statement
             match = re.search(r"(\d+)/([A-Z]{1,2})(\d{1,2})/(\d+)", footer_text)
             st.write("Match text",match)
             if match:
