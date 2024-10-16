@@ -46,46 +46,48 @@ def extract_year_from_pdf(pdf):
 
 # Function to extract school code, subject, class, and section from the footer
 def extract_info_from_footer(pdf):
-    # st.write("Calling extract_info_from_footer")  # Debug statement
     for page in pdf.pages:
-        # Get the height and width of the page to target the footer area
         page_height = page.height
         page_width = page.width
-        
+
         # Define a box at the bottom of the page to extract footer text
         footer_box = (0, page_height - 50, page_width, page_height)
         footer_text = page.within_bbox(footer_box).extract_text()
-        
+
         if footer_text:
-            st.write("Footer text for info extraction:", footer_text)  # Debug statement
-            match = re.search(r"(\d+)/([A-Z])(\d{1,2})([A-Z])", footer_text)
-            st.write("Match text",match)
+            # Display the extracted footer text for debugging
+            st.write(f"Footer text extracted: {footer_text}")
+            
+            # Adjusted regex to handle leading characters or spaces and to match 'C' for Computational Thinking
+            match = re.search(r".*?(\d+)/([A-Z])(\d{1,2})/(\d+)", footer_text.strip())
+            st.write(f"Pattern match: {match}")  # Debugging to see if the match succeeds
+            
             if match:
                 school_code = match.group(1)
                 subject_code = match.group(2)
                 class_value = match.group(3)
                 section = match.group(4)
-                # st.write("Extracted info - School Code:", school_code, "Subject:", subject_code, "Class:", class_value, "Section:", section)  # Debug statement
-                
+
+                # Map subject code to full subject name
                 if subject_code == 'E':
                     subject = 'English'
                 elif subject_code == 'M':
                     subject = 'Maths'
                 elif subject_code == 'S':
                     subject = 'Science'
-                elif subject_code == 'C' or subject_code == 'CT':
+                elif subject_code == 'C':  # Match only 'C' for Computational Thinking
                     subject = 'Computational Thinking'
                 elif subject_code == 'G':
                     subject = 'Social Studies'
                 elif subject_code == 'H':
-                    subject = 'Hindi'    
+                    subject = 'Hindi'
                 else:
                     subject = 'Unknown'
-                
-                return school_code, subject, class_value, section
-    st.write("No school code/subject/class/section found")  # Debug statement
-    return None, None, None, None
 
+                return school_code, subject, class_value, section
+
+    st.write("No school code/subject/class/section found")
+    return None, None, None, None
 # Function to extract data from a single PDF
 def extract_data_from_pdf(uploaded_file):
     # st.write("Calling extract_data_from_pdf")  # Debug statement
