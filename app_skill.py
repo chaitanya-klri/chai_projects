@@ -22,31 +22,34 @@ def find_skill_summary_page(pdf):
 
 # Function to extract the year based on specific terms (e.g., "Summer 2023")
 def extract_year_from_pdf(pdf):
-    # st.write("Calling extract_year_from_pdf")  # Debug statement
-    # Define the patterns to search for
+    # Define the patterns to search for, including month-year patterns
     patterns = [
         r"Summer 2023", r"Winter 2023",
         r"Summer 2024", r"Winter 2024",
         r"Summer 2022", r"Winter 2022",
-        # Add all month-year combinations
-    r"January \d{4}", r"February \d{4}", r"March \d{4}", r"April \d{4}",
-    r"May \d{4}", r"June \d{4}", r"July \d{4}", r"August \d{4}",
-    r"September \d{4}", r"October \d{4}", r"November \d{4}", r"December \d{4}"
+
+        # Month-year combinations
+        r"January \d{4}", r"February \d{4}", r"March \d{4}", r"April \d{4}",
+        r"May \d{4}", r"June \d{4}", r"July \d{4}", r"August \d{4}",
+        r"September \d{4}", r"October \d{4}", r"November \d{4}", r"December \d{4}"
     ]
+
     page = pdf.pages[3]
     text = page.extract_text()
+
     if text:
-            # st.write("Text is",text)
-            # Search for the specific patterns
-            for pattern in patterns:
-                if re.search(pattern, text):
-                    # st.write("Pattern found:", pattern)  # Debug statement
-                    # Extract the year from the pattern
-                    year = pattern[-4:]
-                    # st.write("Extracted Year:", year)  # Debug statement
+        # Search for the specific patterns
+        for pattern in patterns:
+            match = re.search(pattern, text)
+            if match:
+                # After finding the pattern, extract the year from the matched string
+                year_match = re.search(r"\d{4}", match.group(0))  # Extract the year from the match
+                if year_match:
+                    year = year_match.group(0)  # This will give the actual year (e.g., '2023')
                     return year
-    # st.write("No matching year pattern found in the PDF")  # Debug statement
+
     return None
+
 
 # Function to extract school code, subject, class, and section from the footer
 def extract_info_from_footer(pdf):
