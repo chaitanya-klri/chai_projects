@@ -57,7 +57,7 @@ def extract_info_from_footer(pdf):
         footer_text = page.within_bbox(footer_box).extract_text()
         
         if footer_text:
-            st.write("Footer text for info extraction:", footer_text)  # Debug statement
+            # st.write("Footer text for info extraction:", footer_text)  # Debug statement
             match = re.search(r"(\d+)/([A-Z])(\d{1,2})([A-Z])", footer_text)
             st.write("Match text",match)
             if match:
@@ -65,7 +65,7 @@ def extract_info_from_footer(pdf):
                 subject_code = match.group(2)
                 class_value = match.group(3)
                 section = match.group(4)
-                # st.write("Extracted info - School Code:", school_code, "Subject:", subject_code, "Class:", class_value, "Section:", section)  # Debug statement
+                st.write("Extracted info - School Code:", school_code, "Subject:", subject_code, "Class:", class_value, "Section:", section)  # Debug statement
                 
                 if subject_code == 'E':
                     subject = 'English'
