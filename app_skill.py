@@ -46,7 +46,7 @@ def extract_year_from_pdf(pdf):
 
 # Function to extract school code, subject, class, and section from the footer
 def extract_info_from_footer(pdf):
-    st.write("Calling extract_info_from_footer")  # Debug statement
+    #st.write("Calling extract_info_from_footer")  # Debug statement
     for page in pdf.pages:
         # Get the height and width of the page to target the footer area
         page_height = page.height
