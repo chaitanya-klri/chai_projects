@@ -73,7 +73,7 @@ def extract_info_from_footer(pdf):
                     subject = 'Maths'
                 elif subject_code == 'S':
                     subject = 'Science'
-                elif subject_code == 'C' or subject_code == 'CT':
+                elif subject_code == 'C':
                     subject = 'Computational Thinking'
                 elif subject_code == 'G':
                     subject = 'Social Studies'
