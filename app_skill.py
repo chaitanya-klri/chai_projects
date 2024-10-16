@@ -99,8 +99,8 @@ def search_for_assetdynamic(pdf):
     page_text = page.extract_text()
 
     if page_text:
-        # Check if 'www.assetdynamic.com' is in the extracted text
-        if 'www.assetdynamic.com' in page_text:
+        # Check if 'ASSET Dynamic' is in the extracted text
+        if 'ASSET Dynamic' in page_text:
             return True
         else:
             return False
